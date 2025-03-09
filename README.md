@@ -18,7 +18,7 @@ A modern, minimalist time management application based on the Lyubishev Time-Tra
 
 ## 🚀 Live Demo
 
-Experience TimeWise: [Live Demo](https://jinjiaacademy.github.io/TimeWise)
+Experience TimeWise: [Live Demo](https://jinjiaacademy.github.io/TimeWise/)
 
 ## 🛠️ Technology Stack
 
