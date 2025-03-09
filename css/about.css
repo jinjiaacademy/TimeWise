@@ -1,0 +1,136 @@
+/* About page styles */
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.about-navigation {
+    margin-bottom: 20px;
+}
+
+.about-section {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--shadow-color);
+    padding: 25px;
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.about-content, .instructions-content, .tips-content {
+    line-height: 1.7;
+}
+
+.about-content h3, .instruction-step h3, .tip-card h3 {
+    color: var(--secondary-color);
+    margin: 25px 0 15px;
+}
+
+.about-content p, .instruction-step p, .tip-card p {
+    margin-bottom: 15px;
+}
+
+.about-content ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.about-content li {
+    margin-bottom: 8px;
+}
+
+/* Benefits grid */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.benefit-card {
+    background-color: var(--background-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px var(--shadow-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.benefit-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+/* Instruction steps */
+.instruction-step {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.instruction-step:last-child {
+    border-bottom: none;
+}
+
+.instruction-step ul {
+    margin-left: 20px;
+}
+
+.instruction-step li {
+    margin-bottom: 8px;
+}
+
+/* Tips cards */
+.tips-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.tip-card {
+    background-color: var(--background-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px var(--shadow-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.about-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.about-footer p {
+    margin-bottom: 15px;
+    color: var(--dark-gray);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .benefits-grid, .tips-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .about-section {
+        padding: 20px 15px;
+    }
+}

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeWise</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Include localForage for IndexedDB storage -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+    <!-- Include Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>TimeWise</h1>
+                </div>
+                <div class="header-center">
+                    <nav class="main-nav">
+                        <a href="#" class="nav-link active">Dashboard</a>
+                        <a href="about.html" class="nav-link">About</a>
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <div id="current-date-time">Loading...</div>
+                    <div class="theme-toggle">
+                        <span id="theme-label">Light</span>
+                        <label class="switch">
+                            <input type="checkbox" id="theme-switch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="main-content-container">
+                <!-- Left Side: Time Tracking -->                
+                <div class="main-left-panel">
+                    <section class="timer-section">
+                        <h2>Time Tracking</h2>
+                        <div class="timer-display">
+                            <div id="current-activity">No activity running</div>
+                            <div id="timer">00:00:00</div>
+                        </div>
+                        <div class="timer-controls">
+                            <button id="start-timer" class="btn primary">Start Timer</button>
+                            <button id="pause-timer" class="btn secondary" disabled>Pause</button>
+                            <button id="stop-timer" class="btn secondary" disabled>Stop</button>
+                        </div>
+                        <div class="activity-input">
+                            <input type="text" id="activity-name" placeholder="Activity name">
+                            <select id="activity-category">
+                                <option value="">Select category</option>
+                                <option value="work">Work</option>
+                                <option value="study">Study</option>
+                                <option value="personal">Personal</option>
+                                <option value="health">Health</option>
+                                <option value="leisure">Leisure</option>
+                                <option value="manage" class="manage-option">➕ Manage categories...</option>
+                            </select>
+                            <textarea id="activity-notes" placeholder="Notes (optional)"></textarea>
+                        </div>
+                    </section>
+
+                    <section class="entries-section">
+                        <h2>Today's Activities</h2>
+                        <div id="activity-list" class="activity-list">
+                            <!-- Activity entries will be displayed here -->
+                            <div class="empty-state">No activities recorded today</div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Side: Analytics Dashboard -->
+                <div class="main-right-panel">
+                    <section class="analytics-section">
+                        <h2>Analytics Dashboard</h2>
+                        
+                        <!-- Calendar Section -->
+                        <div class="calendar-section">
+                            <div class="calendar-header">
+                                <button id="prev-month" class="btn secondary calendar-nav">❮</button>
+                                <h3 id="current-month">March 2025</h3>
+                                <button id="next-month" class="btn secondary calendar-nav">❯</button>
+                            </div>
+                            <div class="calendar-grid">
+                                <div class="weekday">Sun</div>
+                                <div class="weekday">Mon</div>
+                                <div class="weekday">Tue</div>
+                                <div class="weekday">Wed</div>
+                                <div class="weekday">Thu</div>
+                                <div class="weekday">Fri</div>
+                                <div class="weekday">Sat</div>
+                                <!-- Calendar days will be generated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="view-controls">
+                            <button class="btn secondary active" id="daily-view">Daily View</button>
+                            <button class="btn secondary" id="weekly-view">Weekly View</button>
+                        </div>
+                        <div class="charts-container">
+                            <div class="chart-wrapper">
+                                <h3>Time Distribution by Category</h3>
+                                <canvas id="category-chart"></canvas>
+                            </div>
+                            <div class="chart-wrapper">
+                                <h3>Time Spent per Day</h3>
+                                <canvas id="time-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="summary-stats">
+                            <div class="stat-card">
+                                <h4>Total Time Tracked</h4>
+                                <div id="total-time" class="stat-value">0h 0m</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Most Time Spent On</h4>
+                                <div id="most-time-category" class="stat-value">N/A</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Activities Completed</h4>
+                                <div id="activities-count" class="stat-value">0</div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Categories Section (Hidden by default, shown when managing categories) -->
+            <section class="categories-section" id="categories-section">
+                <h2>Categories</h2>
+                <div class="categories-container">
+                    <div class="categories-list" id="categories-list">
+                        <!-- Categories will be displayed here -->
+                    </div>
+                    <div class="category-form">
+                        <h3>Add/Edit Category</h3>
+                        <form id="category-form">
+                            <div class="form-group">
+                                <label for="category-name">Category Name</label>
+                                <input type="text" id="category-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="category-color">Color</label>
+                                <input type="color" id="category-color" value="#4a6fa5">
+                            </div>
+                            <div class="form-group">
+                                <label for="parent-category">Parent Category (Optional)</label>
+                                <select id="parent-category">
+                                    <option value="">None</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn primary" id="save-category">Save Category</button>
+                                <button type="button" class="btn secondary" id="cancel-category">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="back-to-main">
+                    <button id="back-to-tracking" class="btn secondary">← Back to Time Tracking</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>TimeWise - MVP Version</p>
+        </footer>
+    </div>
+
+    <!-- Modal for adding/editing entries -->
+    <div id="entry-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">Add Time Entry</h2>
+            <form id="entry-form">
+                <div class="form-group">
+                    <label for="modal-activity-name">Activity Name</label>
+                    <input type="text" id="modal-activity-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-category">Category</label>
+                    <select id="modal-category" required>
+                        <option value="work">Work</option>
+                        <option value="study">Study</option>
+                        <option value="personal">Personal</option>
+                        <option value="health">Health</option>
+                        <option value="leisure">Leisure</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal-start-time">Start Time</label>
+                    <input type="datetime-local" id="modal-start-time" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-end-time">End Time</label>
+                    <input type="datetime-local" id="modal-end-time" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-notes">Notes</label>
+                    <textarea id="modal-notes"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Save</button>
+                    <button type="button" class="btn secondary" id="cancel-entry">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal for day analytics -->
+    <div id="day-analytics-modal" class="modal">
+        <div class="modal-content day-analytics-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="day-analytics-title">Activities for March 9, 2025</h2>
+            <div class="day-analytics-container">
+                <div class="day-chart-container">
+                    <canvas id="day-category-chart"></canvas>
+                </div>
+                <div class="day-stats">
+                    <div class="stat-card">
+                        <h4>Total Time</h4>
+                        <div id="day-total-time" class="stat-value">0h 0m</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Most Time On</h4>
+                        <div id="day-most-category" class="stat-value">N/A</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Activities</h4>
+                        <div id="day-activity-count" class="stat-value">0</div>
+                    </div>
+                </div>
+                <div class="day-activities-list">
+                    <h3>Activities</h3>
+                    <div id="day-activities" class="activity-list">
+                        <!-- Day's activities will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript files -->
+    <script src="js/storage.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
